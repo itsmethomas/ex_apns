@@ -164,24 +164,24 @@ connect(#state{env = Env, certfile = CertFile}) ->
 %% @spec send(iodata(), #state{}) -> {noreply, #state{}} | {stop, reason()}
 %%       where reason() = closed | inet:posix()
 send(Packet, State = #state{socket = Socket}) ->
-  case ssl:send(Socket, Packet) of
-    ok -> {noreply, State};
-    {error, closed} ->
-      case read_error(Socket) of
-        undefined ->
-          Format = "~w[~w]: could not send last notification~n",
-          error_logger:error_msg(Format, [?MODULE, name()]);
-        {Identifier, Status} ->
-          Format = "~w[~w]: could not send extended notification ~B (~w)~n",
-          error_logger:error_msg(Format,
-                                 [?MODULE, name(), Identifier, Status]) end,
+%%   case ssl:send(Socket, Packet) of
+%%     ok -> {noreply, State};
+%%     {error, closed} ->
+%%       case read_error(Socket) of
+%%         undefined ->
+%%           Format = "~w[~w]: could not send last notification~n",
+%%           error_logger:error_msg(Format, [?MODULE, name()]);
+%%         {Identifier, Status} ->
+%%           Format = "~w[~w]: could not send extended notification ~B (~w)~n",
+%%           error_logger:error_msg(Format,
+%%                                  [?MODULE, name(), Identifier, Status]) end,
       case connect(State) of
         {ok, NewSocket} ->
           case ssl:send(NewSocket, Packet) of
             ok -> {noreply, State#state{socket = NewSocket}};
             {error, Reason} -> {stop, Reason} end;
-        {error, Reason} -> {stop, Reason} end;
-    {error, Reason} -> {stop, Reason} end.
+        {error, Reason} -> {stop, Reason} end.
+%%     {error, Reason} -> {stop, Reason} end.
 
 read_error(Socket) ->
   case ssl:recv(Socket, 6) of
