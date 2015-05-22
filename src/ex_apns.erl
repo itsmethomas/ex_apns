@@ -153,11 +153,10 @@ code_change(_OldVsn, State, _Extra) ->
 %%             result() = {ok, ssl:socket()} | {error, inet:posix()}
 connect(Address, Port, CertFile) ->
   CaCertFile = filename:join([code:priv_dir(?MODULE), "entrust_2048_ca.cer"]),
-  error_logger:error_report(["CaCertFile", CertFile]),
+  error_logger:error_report(["CaCertFile", CaCertFile]),
   SslOptions = [binary,
                 {active, false},
-                {certfile, CertFile},
-                {cacertfile, CaCertFile}],
+                {certfile, CertFile}],
   ssl:connect(Address, Port, SslOptions).
 
 %% @spec connect(State::#state{}) -> {ok, #state{}} | {stop, reason()}
