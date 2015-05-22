@@ -67,6 +67,7 @@ start_link(Name, Env, CertFile) ->
 %% @spec send(server_ref(), token(), payload()) -> ok
 %% @doc Send a notification.
 send(ServerRef, Token, Payload) ->
+	error_logger:error_report([ServerRef, Token, Payload]),
   gen_server:cast(ServerRef, {send, Token, Payload}).
 
 %% @spec send(server_ref(), token(), payload(), integer()) -> ok
