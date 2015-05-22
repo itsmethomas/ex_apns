@@ -180,7 +180,7 @@ send(Packet, State = #state{socket = Socket}) ->
 %%                                  [?MODULE, name(), Identifier, Status]) end,
       case connect(State) of
         {ok, NewSocket} ->
-			error_logger:error_report([<<"NewSocket">>, Packet]),
+			error_logger:error_report([NewSocket, Packet]),
           case ssl:send(NewSocket, Packet) of
             ok -> error_logger:error_report([<<"ssl sended">>]), {noreply, State#state{socket = NewSocket}};
             {error, Reason} -> error_logger:error_report([<<"Error Occured">>, Reason]), {stop, Reason} end;
