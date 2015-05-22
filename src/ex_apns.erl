@@ -166,6 +166,7 @@ connect(#state{env = Env, certfile = CertFile}) ->
 
 %% @spec send(iodata(), #state{}) -> {noreply, #state{}} | {stop, reason()}
 %%       where reason() = closed | inet:posix()
+
 send(Packet, State = #state{socket = Socket}) ->
 %%   case ssl:send(Socket, Packet) of
 %%     ok -> {noreply, State};
@@ -182,9 +183,12 @@ send(Packet, State = #state{socket = Socket}) ->
         {ok, NewSocket} ->
 			error_logger:error_report([NewSocket, Packet]),
           case ssl:send(NewSocket, Packet) of
-            ok -> error_logger:error_report([<<"ssl sended">>]), {noreply, State#state{socket = NewSocket}};
-            {error, Reason} -> error_logger:error_report([<<"Error Occured">>, Reason]), {stop, Reason} end;
-        {error, Reason} -> {stop, Reason} end.
+            ok -> error_logger:error_report([<<"ssl sended">>]),
+				  {noreply, State#state{socket = NewSocket}};
+            {error, Reason} -> error_logger:error_report([<<"Error Occured">>, Reason]),
+							   {stop, Reason} end;
+		  {error, Reason} -> error_logger:error_report([<<"Error Occured">>, Reason]),
+							 {stop, Reason} end.
 %%     {error, Reason} -> {stop, Reason} end.
 
 read_error(Socket) ->
