@@ -162,6 +162,7 @@ connect(Address, Port, CertFile) ->
 %% @spec connect(State::#state{}) -> {ok, #state{}} | {stop, reason()}
 %%       where reason() = closed | inet:posix()
 connect(#state{env = Env, certfile = CertFile}) ->
+  error_logger:error_report([env_to_gateway(Env), CertFile]),
   connect(env_to_gateway(Env), 2195, CertFile).
 
 %% @spec send(iodata(), #state{}) -> {noreply, #state{}} | {stop, reason()}
@@ -181,7 +182,6 @@ send(Packet, State = #state{socket = Socket}) ->
 %%                                  [?MODULE, name(), Identifier, Status]) end,
       case connect(State) of
         {ok, NewSocket} ->
-			error_logger:error_report([NewSocket, Packet]),
           case ssl:send(NewSocket, Packet) of
             ok -> error_logger:error_report([<<"ssl sended">>]),
 				  {noreply, State#state{socket = NewSocket}};
