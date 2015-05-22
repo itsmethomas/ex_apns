@@ -119,7 +119,7 @@ handle_call(_Request, _From, State) ->
 
 %% @hidden
 handle_cast({send, Token, Payload}, State) ->
-  error_logger:error_report([Token, Payload, State]),
+  error_logger:error_report(["Handle Cast Called"]),
   TokenInt = token_to_integer(Token),
   PayloadBin = jsx:term_to_json(Payload),
   Packet = [<<0, 32:16, TokenInt:256,
